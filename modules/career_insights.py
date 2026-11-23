@@ -667,12 +667,15 @@ def classify_job_freshness(
             "published_date": f"{pub_ts.strftime('%Y-%m-%d %H:%M UTC')} (Future)",
         }
 
-    age_days = max(0.0, round(delta_days, 1))
+    # Classify using precise age; round only for display.
+    precise_age_days = max(0.0, delta_days)
+    age_days = round(precise_age_days, 1)
+
     if explicit_expired:
         category = "Expired"
-    elif age_days <= fresh_days:
+    elif precise_age_days <= fresh_days:
         category = "Fresh"
-    elif age_days <= aging_days:
+    elif precise_age_days <= aging_days:
         category = "Aging"
     else:
         category = "Stale / possibly outdated"
@@ -748,12 +751,16 @@ def evaluate_jobs_freshness(
 
         delta_days = ((ref_ts - pub_ts).dt.total_seconds() / 86400.0).to_numpy(dtype=float)
         valid_date = pub_ts.notna().to_numpy() & np.isfinite(delta_days) & (delta_days >= -0.08)
-        age_vals = np.where(valid_date, np.maximum(0.0, np.round(delta_days, 1)), np.nan)
+        # Classify using precise age; round only for display.
+        precise_age_vals = np.where(
+            valid_date, np.maximum(0.0, delta_days), np.nan
+        )
+        age_vals = np.round(precise_age_vals, 1)
 
         categories = np.full(n, "Missing / Invalid Date", dtype=object)
-        fresh_mask = valid_date & (~explicit_expired) & (age_vals <= fresh_days)
-        aging_mask = valid_date & (~explicit_expired) & (age_vals > fresh_days) & (age_vals <= aging_days)
-        stale_mask = valid_date & (~explicit_expired) & (age_vals > aging_days)
+        fresh_mask = valid_date & (~explicit_expired) & (precise_age_vals <= fresh_days)
+        aging_mask = valid_date & (~explicit_expired) & (precise_age_vals > fresh_days) & (precise_age_vals <= aging_days)
+        stale_mask = valid_date & (~explicit_expired) & (precise_age_vals > aging_days)
 
         categories[fresh_mask] = "Fresh"
         categories[aging_mask] = "Aging"
