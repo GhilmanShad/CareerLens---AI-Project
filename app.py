@@ -1359,9 +1359,15 @@ else:
                             column_config={
                                 "url": st.column_config.LinkColumn("Job Link"),
                                 "match_score": st.column_config.NumberColumn("Match Score (%)", format="%.1f%%"),
+                                "matched_skills": st.column_config.TextColumn("Matched Skills"),
+                                "missing_skills": st.column_config.TextColumn("Other Skills Mentioned"),
                             },
                         )
-                        st.caption("Match score reflects text & skill similarity, not hiring probability.")
+                        st.caption(
+                            "Match score reflects text and skill similarity, not hiring probability. "
+                            "Other Skills Mentioned are keywords detected in job postings but absent "
+                            "from your resume; they are not verified mandatory requirements."
+                        )
 
         # --------------------------------------------------
         # TAB 4: CAREER ROLE COMPARISON
