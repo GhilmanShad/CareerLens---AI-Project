@@ -1,0 +1,33 @@
+Total eligible records: 26747
+Training records: 16047
+Testing records: 5350
+
+Training Decision Tree...
+
+DECISION TREE FINAL TEST
+==================================================
+Accuracy: 0.6465 (64.65%)
+
+Classification Report:
+                  precision    recall  f1-score   support
+
+       Associate       0.50      0.00      0.00       754
+        Director       0.79      0.61      0.69       244
+     Entry level       0.62      0.69      0.65      1727
+       Executive       0.35      0.33      0.34        72
+      Internship       0.90      0.37      0.52        73
+Mid-Senior level       0.66      0.83      0.74      2480
+
+        accuracy                           0.65      5350
+       macro avg       0.64      0.47      0.49      5350
+    weighted avg       0.63      0.65      0.60      5350
+
+
+Confusion Matrix:
+Class order: ['Associate', 'Director', 'Entry level', 'Executive', 'Internship', 'Mid-Senior level']
+[[   1    7  334    2    0  410]
+ [   0  148    4   17    0   75]
+ [   0    0 1192    2    3  530]
+ [   0    5    2   24    0   41]
+ [   0    0   25    0   27   21]
+ [   1   28  360   24    0 2067]]
