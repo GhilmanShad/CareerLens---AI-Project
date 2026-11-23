@@ -1,0 +1,18 @@
+K-MEANS CLUSTERING EVALUATION
+============================================================
+Records after preprocessing and IQR filtering: 33717
+Evaluation sample size: 5000
+
+CLUSTERING RESULTS
+============================================================
+ K  Silhouette  Davies-Bouldin            Inertia  Clusters Found
+ 2      0.6201          0.5410 3350164502142.6787               2
+ 3      0.5653          0.5368 1636781740427.6270               3
+ 4      0.5703          0.5175  958614586986.2064               4
+ 5      0.5607          0.5161  638657517748.9434               5
+ 6      0.5293          0.5307  490297588967.9084               6
+ 7      0.5620          0.4784  402520149585.7649               7
+ 8      0.5553          0.4758  285284582770.6215               8
+
+Best K by Silhouette Score: 2
+Silhouette Score: 0.6201
