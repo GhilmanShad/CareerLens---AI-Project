@@ -1,3 +1,4 @@
+import numpy as np
 import requests
 import pandas as pd
 import streamlit as st
@@ -36,18 +37,32 @@ def map_live_to_local_format(live_df):
     if live_df is None or live_df.empty:
         return pd.DataFrame()
 
-    mapped_df = pd.DataFrame()
-    mapped_df['job_title'] = live_df['job_title']
-    mapped_df['company'] = live_df['employer_name']
-    
-    if 'job_min_salary' in live_df.columns and 'job_max_salary' in live_df.columns:
-        mapped_df['salary'] = live_df[['job_min_salary', 'job_max_salary']].mean(axis=1)
-    else:
-        mapped_df['salary'] = np.nan
-        
-    mapped_df['description'] = live_df.get('job_description', "No description")
-    mapped_df['job_level'] = 'Mid' 
-    
+    mapped_df = pd.DataFrame(index=live_df.index)
+    mapped_df['job_title'] = live_df.get('job_title')
+    mapped_df['company'] = live_df.get('employer_name')
+
+    min_salary = pd.to_numeric(
+        live_df.get('job_min_salary'), errors='coerce'
+    ) if 'job_min_salary' in live_df.columns else pd.Series(
+        np.nan, index=live_df.index
+    )
+
+    max_salary = pd.to_numeric(
+        live_df.get('job_max_salary'), errors='coerce'
+    ) if 'job_max_salary' in live_df.columns else pd.Series(
+        np.nan, index=live_df.index
+    )
+
+    # Use whichever salary bound is available; average when both exist.
+    mapped_df['salary'] = pd.concat(
+        [min_salary, max_salary], axis=1
+    ).mean(axis=1, skipna=True)
+
+    mapped_df['description'] = live_df.get(
+        'job_description', pd.Series("No description", index=live_df.index)
+    )
+    mapped_df['job_level'] = 'Mid'
+
     mapped_df = mapped_df.dropna(subset=['salary'])
-    
+
     return mapped_df
