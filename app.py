@@ -361,7 +361,13 @@ st.markdown("""
         color: #111827 !important;
         -webkit-text-fill-color: #111827 !important;
     }
-    
+        /* Decision Tree result text contrast */
+    .decision-tree-result-text,
+    .decision-tree-result-text p {
+        color: #111827 !important;
+        -webkit-text-fill-color: #111827 !important;
+        opacity: 1 !important;
+    }
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
 </style>
@@ -802,24 +808,35 @@ else:
                         value = sample_values[feature_idx]
 
                         if value <= threshold:
-                            st.write(
-                                f"{feature_name}: {value:,.0f} "
-                                f"≤ {threshold:,.0f} → Left"
+                            st.markdown(
+                                f'<p class="decision-tree-result-text">'
+                                f'{feature_name}: {value:,.0f} '
+                                f'≤ {threshold:,.0f} → Left</p>',
+                                unsafe_allow_html=True
                             )
                             current_node = current_node.left
                         else:
-                            st.write(
-                                f"{feature_name}: {value:,.0f} "
-                                f"> {threshold:,.0f} → Right"
+                            st.markdown(
+                                f'<p class="decision-tree-result-text">'
+                                f'{feature_name}: {value:,.0f} '
+                                f'&gt; {threshold:,.0f} → Right</p>',
+                                unsafe_allow_html=True
                             )
                             current_node = current_node.right
 
-                    st.write(f"Leaf prediction: **{current_node.value}**")
+                    st.markdown(
+                        f'<p class="decision-tree-result-text">'
+                        f'Leaf prediction: <strong>{current_node.value}</strong></p>',
+                        unsafe_allow_html=True
+                    )
 
                 with col_pred:
                     st.subheader("Prediction")
-                    st.metric("Job level", prediction)
-
+                    st.markdown(
+                        '<p class="decision-tree-result-text"><strong>Job level</strong></p>',
+                        unsafe_allow_html=True
+                    )
+                    st.info(prediction)
     # ==========================================
     # 6. CAREER PATH FINDER
     # ==========================================
