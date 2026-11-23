@@ -1092,7 +1092,7 @@ else:
             new_status = st.selectbox("New status", ["Saved", "Applied", "Interview", "Offer", "Rejected"])
             if st.button("Update application status"):
                 update_application_status(int(selected_id), new_status)
-                st.success("Application status updated.")
+                st.rerun()
 
     elif menu == "Career Tools":
         st.caption(

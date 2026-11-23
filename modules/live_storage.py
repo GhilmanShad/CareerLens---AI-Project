@@ -354,7 +354,17 @@ def load_applications(db_path: str | Path | None = None) -> pd.DataFrame:
 def update_application_status(application_id: int, status: str, db_path: str | Path | None = None) -> None:
     init_db(db_path)
     with _connect(db_path) as connection:
+        now = _now_iso()
         connection.execute(
-            "UPDATE job_applications SET status = ?, updated_at = ? WHERE application_id = ?",
-            (status, _now_iso(), application_id),
+            """
+            UPDATE job_applications
+            SET status = ?,
+                updated_at = ?,
+                applied_at = CASE
+                    WHEN ? = 'Applied' AND applied_at IS NULL THEN ?
+                    ELSE applied_at
+                END
+            WHERE application_id = ?
+            """,
+            (status, now, status, now, application_id),
         )
