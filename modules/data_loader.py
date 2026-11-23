@@ -25,7 +25,7 @@ def prepare_dataset(df):
             renamed[column] = target
             reserved.add(target)
     if renamed:
-        df.rename(columns=renamed, inplace=True)
+        df = df.rename(columns=renamed)
     if "job_title" not in df.columns:
         raise ValueError("CSV needs a job_title, title, or position column.")
     for column, default in {"company": "Unknown", "description": "", "salary": pd.NA,

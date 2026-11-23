@@ -7,7 +7,8 @@ def clean_data(df, inplace=False, remove_duplicates=False):
         df = df.copy()
 
     # Remove records without a valid job title.
-    df.dropna(subset=["job_title"], inplace=True)
+    valid_titles = df["job_title"].notna()
+    df = df.loc[valid_titles].copy()
 
     # Fill missing company names.
     if "company" in df.columns:
