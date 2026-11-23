@@ -574,7 +574,24 @@ else:
             if nearest_jobs.empty:
                 st.warning("No matching jobs with valid salaries were found.")
             else:
-                predicted_level = predict_job_level(nearest_jobs)
+                # Use labeled neighbors for job-level prediction.
+                labeled_df = df.copy()
+
+                if "job_level" in labeled_df.columns:
+                    levels = labeled_df["job_level"].astype("string").str.strip()
+                    valid_levels = (
+                        levels.notna()
+                        & levels.ne("")
+                        & ~levels.str.lower().isin(["none", "nan", "null", "unknown"])
+                    ).fillna(False)
+                    labeled_df = labeled_df.loc[valid_levels]
+                else:
+                    labeled_df = labeled_df.iloc[0:0]
+
+                labeled_neighbors = get_knn_recommendations(
+                    labeled_df, target_salary, k=int(k_neighbors)
+                )
+                predicted_level = predict_job_level(labeled_neighbors)
 
                 st.success(
                     f"Found {len(nearest_jobs)} nearest job postings."
