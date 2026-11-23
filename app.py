@@ -620,12 +620,24 @@ else:
     elif menu == "K-Means Clustering":
         st.markdown("<p style='color: #6b7280; font-size: 16px; margin-top: -10px;'>Group postings by selected numeric features</p><br>", unsafe_allow_html=True)
         
-        col1, col2, col3, col4 = st.columns(4)
-        with col1: st.text_input("Feature X", "salary", disabled=True)
-        with col2: st.text_input("Feature Y", "job_index", disabled=True)
-        with col3: k_clusters = st.number_input("K (clusters)", min_value=2, max_value=8, value=3)
-        with col4: st.text_input("Max iterations", "100", disabled=True)
-        
+        st.caption(
+            "One-dimensional K-Means: groups jobs by annual salary. "
+            "Job index is used only for visualization."
+        )
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.text_input("Clustering feature", "salary", disabled=True)
+
+        with col2:
+            k_clusters = st.number_input(
+                "K (clusters)", min_value=2, max_value=8, value=3
+            )
+
+        with col3:
+            st.text_input("Max iterations", "100", disabled=True)
+
         apply_iqr = st.checkbox(
             "Exclude salary outliers using IQR",
             value=True
@@ -668,7 +680,26 @@ else:
                     ax.scatter(cluster_data.index, cluster_data['salary'], c=colors[i % len(colors)], label=f'Cluster {i}', alpha=0.6)
                 
                 for i, centroid in enumerate(centroids):
-                    ax.scatter(len(clustered_df) + 100, centroid[0], c=colors[i % len(colors)], marker='X', s=200, edgecolors='black')
+                    cluster_data = clustered_df[
+                        clustered_df["cluster"] == i
+                    ]
+
+                    if cluster_data.empty:
+                        continue
+
+                    centroid_x = np.mean(
+                        cluster_data.index.to_numpy(dtype=float)
+                    )
+
+                    ax.scatter(
+                        centroid_x,
+                        centroid[0],
+                        c=colors[i % len(colors)],
+                        marker="X",
+                        s=200,
+                        edgecolors="black",
+                        zorder=5
+                    )
                 
                 ax.spines['top'].set_visible(False); ax.spines['right'].set_visible(False)
                 ax.set_xlabel("Job Index", color='#374151')
