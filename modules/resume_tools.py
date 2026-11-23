@@ -515,20 +515,26 @@ def build_learning_roadmap(
     profile_key = _match_profile_key(role)
     profile_map = dict(ROLE_SKILL_PROFILES.get(profile_key, [])) if profile_key else {}
 
-    # Build combined skill list: observed market skills first, supplemented by role profile when sparse.
+    # Recognized roles use their baseline as the primary readiness criteria.
+    # Market-only skills remain optional rather than becoming core requirements.
     ranked_skills: list[tuple[str, int, str]] = []
     seen: set[str] = set()
-    for skill, freq in counts.most_common(top_n):
-        ranked_skills.append((skill, freq, profile_map.get(skill, "Core")))
-        seen.add(skill.lower())
 
-    if len(ranked_skills) < 6 and profile_key:
+    if profile_key:
         for skill, stage in ROLE_SKILL_PROFILES[profile_key]:
+            ranked_skills.append((skill, counts.get(skill, 0), stage))
+            seen.add(skill.lower())
+
+        for skill, freq in counts.most_common():
             if skill.lower() not in seen:
-                ranked_skills.append((skill, 0, stage))
+                ranked_skills.append((skill, freq, "Market-specific"))
                 seen.add(skill.lower())
-            if len(ranked_skills) >= top_n:
+            if len(ranked_skills) >= max(top_n, len(profile_map)):
                 break
+    else:
+        for skill, freq in counts.most_common(top_n):
+            ranked_skills.append((skill, freq, "Core"))
+            seen.add(skill.lower())
 
     matched = [skill for skill, _, _ in ranked_skills if skill.lower() in user_lower]
     missing_entries = [entry for entry in ranked_skills if entry[0].lower() not in user_lower]
@@ -545,7 +551,9 @@ def build_learning_roadmap(
     roadmap_rows = []
     max_freq = max((freq for _, freq, _ in ranked_skills), default=1) or 1
     for step_idx, (skill, freq, stage) in enumerate(missing_entries, start=1):
-        if freq > 0 and (freq / max_freq >= 0.5 or stage == "Foundation"):
+        if stage == "Market-specific":
+            priority = "Optional"
+        elif freq > 0 and (freq / max_freq >= 0.5 or stage == "Foundation"):
             priority = "High"
         elif freq > 0 or stage in {"Foundation", "Core"}:
             priority = "Medium"
@@ -558,7 +566,9 @@ def build_learning_roadmap(
         else:
             demand_label = "Role baseline"
 
-        if stage == "Foundation":
+        if stage == "Market-specific":
+            focus = f"Explore {skill} only if relevant to a specific {role or 'target role'} job."
+        elif stage == "Foundation":
             focus = f"Build core fundamentals in {skill} with hands-on exercises."
         elif stage == "Core":
             focus = f"Apply {skill} in a portfolio project aligned with {role or 'target role'}."
@@ -576,8 +586,17 @@ def build_learning_roadmap(
             }
         )
 
-    total_target = len(ranked_skills)
-    readiness_pct = round((len(matched) / total_target) * 100, 1) if total_target else 0.0
+    if profile_key:
+        baseline_skills = {skill.lower() for skill in profile_map}
+        matched_baseline = baseline_skills & user_lower
+        readiness_pct = round(
+            (len(matched_baseline) / len(baseline_skills)) * 100, 1
+        ) if baseline_skills else 0.0
+    else:
+        total_target = len(ranked_skills)
+        readiness_pct = round(
+            (len(matched) / total_target) * 100, 1
+        ) if total_target else 0.0
 
     sources = []
     if live_count > 0:
