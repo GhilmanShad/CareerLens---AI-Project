@@ -1033,9 +1033,39 @@ else:
             gap_skills = st.text_input("Skills you already have", key="gap_skills", placeholder="Python, SQL")
             gap_role = st.text_input("Target role for gap analysis", key="gap_role", placeholder="Data Analyst")
             if st.button("Analyze skill gap"):
-                matched, missing = skill_gap(gap_skills, visible, gap_role)
-                st.success("You already match: " + (", ".join(matched) or "No common listed skills yet."))
-                st.warning("Skills to build next: " + (", ".join(missing[:10]) or "No additional skills found."))
+                if gap_role.strip():
+                    role_mask = visible["job_title"].fillna("").str.contains(
+                        gap_role.strip(), case=False, regex=False
+                    )
+                    matching_jobs = visible.loc[role_mask]
+                else:
+                    matching_jobs = visible
+
+                sample_size = len(matching_jobs)
+                st.caption(f"Analyzed {sample_size} matching job posting(s).")
+
+                if sample_size == 0:
+                    st.info("No matching jobs found. Try another role or clear the job filters.")
+                else:
+                    if sample_size < 5:
+                        st.warning(
+                            "Limited data: fewer than 5 matching job postings. "
+                            "Skill recommendations may not represent the wider job market."
+                        )
+
+                    matched, missing = skill_gap(gap_skills, matching_jobs)
+                    st.success(
+                        "You already match: "
+                        + (", ".join(matched) or "No common listed skills yet.")
+                    )
+                    st.warning(
+                        "Skills mentioned in postings to consider learning: "
+                        + (", ".join(missing[:10]) or "No additional skills found.")
+                    )
+                    st.caption(
+                        "Skills are ranked by keyword frequency in matching job postings, "
+                        "not by verified importance or mandatory requirements."
+                    )
 
             st.subheader("Save a job application")
             selectable = visible[["job_id", "job_title", "company", "url"]].copy()
