@@ -387,7 +387,13 @@ def analyze_skill_trends(
         if len(m_vc) >= 2 and int((m_vc >= min_period_postings).sum()) >= 2:
             chosen_gran = "M"
             buckets = months
-        elif len(w_vc) >= 2 and int((w_vc >= min_period_postings).sum()) >= 2:
+        elif (
+            len(w_vc) >= 2
+            and int((w_vc >= min_period_postings).sum()) >= 2
+            and (timestamps.max() - timestamps.min()).total_seconds() >= 13 * 86400
+        ):
+            # Avoid comparing partial calendar weeks when fewer than
+            # 14 calendar dates are represented in the dataset.
             chosen_gran = "W"
             buckets = weeks
         else:
