@@ -1,18 +1,36 @@
 K-MEANS CLUSTERING EVALUATION
 ============================================================
-Records after preprocessing and IQR filtering: 33717
-Evaluation sample size: 5000
+Total valid salaries: 34623
+Training records before IQR: 27698
+Testing records before IQR: 6925
+Training records after IQR: 26964
+Testing records after IQR: 6753
+Training sample size: 5000
 
-CLUSTERING RESULTS
+TRAINING CLUSTER COMPARISON
 ============================================================
  K  Silhouette  Davies-Bouldin            Inertia  Clusters Found
- 2      0.6201          0.5410 3350164502142.6787               2
- 3      0.5653          0.5368 1636781740427.6270               3
- 4      0.5703          0.5175  958614586986.2064               4
- 5      0.5607          0.5161  638657517748.9434               5
- 6      0.5293          0.5307  490297588967.9084               6
- 7      0.5620          0.4784  402520149585.7649               7
- 8      0.5553          0.4758  285284582770.6215               8
+ 2      0.6223          0.5279 3349419715780.4951               2
+ 3      0.5743          0.5340 1671527859178.2549               3
+ 4      0.5422          0.5299  994804343002.8317               4
+ 5      0.5179          0.5349  683579704265.3857               5
+ 6      0.5270          0.5500  520809460509.9071               6
+ 7      0.5320          0.4881  423356313007.6645               7
+ 8      0.5463          0.4747  288987343554.8548               8
 
-Best K by Silhouette Score: 2
-Silhouette Score: 0.6201
+Best K by training silhouette: 2
+Training silhouette: 0.6223
+
+K-MEANS FINAL HELD-OUT TEST
+============================================================
+Selected K: 2
+Final training records: 26964
+Testing records: 6753
+Clusters found: 2
+Test Silhouette Score: 0.6122
+Test Davies-Bouldin Index: 0.5356
+Test Inertia: 4475808369792.8662
+
+TRAINED CENTROIDS (Annual USD)
+Cluster 0: $60,456.47 | Test records: 4358
+Cluster 1: $143,128.70 | Test records: 2395
