@@ -10,7 +10,6 @@ from sklearn.metrics import (
 )
 
 from modules.preprocessing import clean_data
-from modules.decision_tree_features import extract_features
 from modules.enhanced_features import extract_enhanced_features
 from modules.decision_tree import build_tree, predict
 
@@ -31,24 +30,13 @@ valid_rows = X.notna().all(axis=1) & np.isfinite(X.to_numpy()).all(axis=1)
 X = X.loc[valid_rows]
 y = y.loc[valid_rows]
 
-# 4. Split before training to prevent test-data leakage
-# Split 1: Reserve 20% for final testing.
-X_temp, X_test, y_temp, y_test = train_test_split(
+# 4. Stratified 80/20 training and testing split
+X_train, X_test, y_train, y_test = train_test_split(
     X,
     y,
     test_size=0.20,
     random_state=42,
     stratify=y,
-)
-
-# Split 2: Reserve 25% of the remaining 80% for validation.
-# Final proportions: 60% train, 20% validation, 20% test.
-X_train, X_val, y_train, y_val = train_test_split(
-    X_temp,
-    y_temp,
-    test_size=0.25,
-    random_state=42,
-    stratify=y_temp,
 )
 
 print("Total eligible records:", len(X))
@@ -59,8 +47,8 @@ print("Testing records:", len(X_test))
 print("\nTraining Decision Tree...")
 
 tree = build_tree(
-    X_temp.to_numpy(),
-    y_temp.to_numpy(),
+    X_train.to_numpy(),
+    y_train.to_numpy(),
     max_depth=7,
 )
 
@@ -91,3 +79,44 @@ labels = sorted(y.unique())
 print("\nConfusion Matrix:")
 print("Class order:", labels)
 print(confusion_matrix(y_test, predictions, labels=labels))
+
+
+# 8. Salary-only Decision Tree for fair comparison with KNN
+print("\nSALARY-ONLY DECISION TREE FINAL TEST")
+print("=" * 50)
+
+salary_tree = build_tree(
+    X_train[["salary"]].to_numpy(),
+    y_train.to_numpy(),
+    max_depth=7,
+)
+
+salary_predictions = [
+    predict(salary_tree, row)
+    for row in X_test[["salary"]].to_numpy()
+]
+
+salary_accuracy = accuracy_score(y_test, salary_predictions)
+
+print(f"Accuracy: {salary_accuracy:.4f} ({salary_accuracy * 100:.2f}%)")
+
+print("\nClassification Report:")
+print(classification_report(
+    y_test,
+    salary_predictions,
+    zero_division=0,
+))
+
+print("\nConfusion Matrix:")
+print("Class order:", labels)
+print(confusion_matrix(
+    y_test,
+    salary_predictions,
+    labels=labels,
+))
+
+print("\nDECISION TREE FEATURE COMPARISON")
+print("=" * 50)
+print(f"Salary-only accuracy: {salary_accuracy * 100:.2f}%")
+print(f"Enhanced accuracy:    {accuracy * 100:.2f}%")
+print(f"Feature improvement:  {(accuracy - salary_accuracy) * 100:+.2f} percentage points")

@@ -1,5 +1,5 @@
 Total eligible records: 26747
-Training records: 16047
+Training records: 21397
 Testing records: 5350
 
 Training Decision Tree...
@@ -31,3 +31,37 @@ Class order: ['Associate', 'Director', 'Entry level', 'Executive', 'Internship',
  [   0    5    2   24    0   41]
  [   0    0   25    0   27   21]
  [   1   28  360   24    0 2067]]
+
+SALARY-ONLY DECISION TREE FINAL TEST
+==================================================
+Accuracy: 0.5946 (59.46%)
+
+Classification Report:
+                  precision    recall  f1-score   support
+
+       Associate       0.19      0.01      0.03       754
+        Director       0.00      0.00      0.00       244
+     Entry level       0.59      0.66      0.62      1727
+       Executive       0.00      0.00      0.00        72
+      Internship       0.00      0.00      0.00        73
+Mid-Senior level       0.61      0.82      0.70      2480
+
+        accuracy                           0.59      5350
+       macro avg       0.23      0.25      0.22      5350
+    weighted avg       0.50      0.59      0.53      5350
+
+
+Confusion Matrix:
+Class order: ['Associate', 'Director', 'Entry level', 'Executive', 'Internship', 'Mid-Senior level']
+[[  11    0  304    0    0  439]
+ [   0    0    3    0    0  241]
+ [  27    0 1146    0    1  553]
+ [   0    0    8    0    0   64]
+ [   0    0   61    0    0   12]
+ [  20    1  435    0    0 2024]]
+
+DECISION TREE FEATURE COMPARISON
+==================================================
+Salary-only accuracy: 59.46%
+Enhanced accuracy:    64.65%
+Feature improvement:  +5.20 percentage points
