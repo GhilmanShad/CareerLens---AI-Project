@@ -798,7 +798,7 @@ def evaluate_jobs_freshness(
                 "last_checked": last_chk.to_numpy(),
                 "url": view["url"].fillna("").to_numpy() if "url" in view.columns else [""] * n,
                 "_sort_rank": ranks,
-                "_sort_age": np.where(np.isnan(age_vals), 1e12, age_vals),
+                "_sort_age": np.where(valid_date, delta_days, 1e12),
             }
         )
 
