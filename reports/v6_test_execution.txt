@@ -1,0 +1,144 @@
+Scored 1000
+Scored 2000
+Scored 3000
+Scored 4000
+Scored 5000
+Scored 6000
+Scored 7000
+Scored 8000
+Scored 9000
+Scored 10000
+Scored 11000
+Scored 12000
+Scored 13000
+Scored 14000
+Scored 15000
+Scored 16000
+Scored 17000
+Scored 18000
+Scored 18972
+{
+  "note": "Frozen selected V6 (supplement weight 0.10) retest on original previously evaluated holdout; not a fresh external holdout. No tuning performed.",
+  "model_sha256": "e2cbc72eb52734a3ed749142845226bd9c8c8bf0a5f5368d07ad4528bf966ef5",
+  "test_records": 18972,
+  "training_original": 60295,
+  "training_supplement": 15000,
+  "validation_records": 15173,
+  "metrics": {
+    "accuracy": 0.8311195445920304,
+    "macro_precision": 0.8019526290619842,
+    "macro_recall": 0.7680549160740088,
+    "macro_f1": 0.7829791468550226,
+    "weighted_f1": 0.8277720858582455,
+    "associate_recall": 0.5112130479102956
+  },
+  "classes": [
+    "Associate",
+    "Director",
+    "Entry level",
+    "Executive",
+    "Internship",
+    "Mid-Senior level"
+  ],
+  "confusion_matrix": [
+    [
+      1003,
+      11,
+      320,
+      3,
+      2,
+      623
+    ],
+    [
+      9,
+      588,
+      12,
+      21,
+      0,
+      118
+    ],
+    [
+      188,
+      10,
+      6689,
+      2,
+      20,
+      667
+    ],
+    [
+      6,
+      17,
+      7,
+      156,
+      0,
+      54
+    ],
+    [
+      4,
+      1,
+      13,
+      0,
+      268,
+      8
+    ],
+    [
+      316,
+      94,
+      642,
+      32,
+      4,
+      7064
+    ]
+  ],
+  "classification_report": {
+    "Associate": {
+      "precision": 0.6572739187418086,
+      "recall": 0.5112130479102956,
+      "f1-score": 0.5751146788990825,
+      "support": 1962.0
+    },
+    "Director": {
+      "precision": 0.8155339805825242,
+      "recall": 0.786096256684492,
+      "f1-score": 0.8005445881552076,
+      "support": 748.0
+    },
+    "Entry level": {
+      "precision": 0.8706234543797996,
+      "recall": 0.8829197465681098,
+      "f1-score": 0.8767284881053804,
+      "support": 7576.0
+    },
+    "Executive": {
+      "precision": 0.7289719626168224,
+      "recall": 0.65,
+      "f1-score": 0.6872246696035242,
+      "support": 240.0
+    },
+    "Internship": {
+      "precision": 0.9115646258503401,
+      "recall": 0.9115646258503401,
+      "f1-score": 0.9115646258503401,
+      "support": 294.0
+    },
+    "Mid-Senior level": {
+      "precision": 0.8277478322006093,
+      "recall": 0.8665358194308145,
+      "f1-score": 0.8466978305166007,
+      "support": 8152.0
+    },
+    "accuracy": 0.8311195445920304,
+    "macro avg": {
+      "precision": 0.8019526290619842,
+      "recall": 0.7680549160740088,
+      "f1-score": 0.7829791468550226,
+      "support": 18972.0
+    },
+    "weighted avg": {
+      "precision": 0.8268072810223447,
+      "recall": 0.8311195445920304,
+      "f1-score": 0.8277720858582455,
+      "support": 18972.0
+    }
+  }
+}

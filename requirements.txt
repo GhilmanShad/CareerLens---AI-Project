@@ -1,8 +1,10 @@
 networkx
 requests
 streamlit
-pandas
-numpy
+pandas>=2.2.3,<3
+numpy==2.3.5
 matplotlib
 pypdf
-scikit-learn
+scikit-learn==1.8.0
+scipy==1.17.0
+joblib==1.5.3
