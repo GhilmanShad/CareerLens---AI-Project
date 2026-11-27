@@ -13,6 +13,9 @@ from modules.knn import get_knn_recommendations, predict_job_level, recommend_li
 from modules.kmeans import run_kmeans  
 from modules.decision_tree import build_tree, predict
 from modules.decision_tree_features import extract_features
+from modules.experience_classifier import load_model, predict_level
+
+
 from modules.graph_search import bfs, dfs, a_star, CAREER_GRAPH, calculate_path_cost
 from modules.job_fetcher import fetch_arbeitnow_jobs, JobFetchError
 from modules.live_preprocessing import normalize_live_jobs, split_pipe_values
@@ -84,6 +87,11 @@ def calculate_skill_demand(descriptions):
 
 # Page configuration
 st.set_page_config(page_title="CareerLens", page_icon="📊", layout="wide")
+
+@st.cache_resource
+def get_experience_model():
+    return load_model()
+
 
 # --- CUSTOM CSS FOR UI (FORCE LIGHT MODE) ---
 st.markdown("""
@@ -389,7 +397,7 @@ with st.sidebar:
     
     # Naya "Live Job Feed" option add kiya gaya hai
     menu = st.radio("Navigation", 
-        ["Market Overview", "Salary & Outliers", "KNN Recommendations", "K-Means Clustering", "Decision Tree", "Career Path Finder", "Live Job Feed", "Career Tools", "Application Tracker"],
+        ["Market Overview", "Salary & Outliers", "KNN Recommendations", "K-Means Clustering", "Decision Tree", "Experience Classifier (SVM)", "Career Path Finder", "Live Job Feed", "Career Tools", "Application Tracker"],
         label_visibility="collapsed")
     
     st.markdown("---")
@@ -412,11 +420,11 @@ with st.sidebar:
 
 st.title(menu)
 
-if st.session_state.data is None and menu not in {"Live Job Feed", "Career Tools", "Application Tracker"}:
+if st.session_state.data is None and menu not in {"Live Job Feed", "Career Tools", "Application Tracker", "Experience Classifier (SVM)"}:
     st.info("👈 Please click 'Load Dataset' in the sidebar to start.")
 else:
     # Agar Live Job Feed select nahi hai tabhi data load karein
-    if menu not in {"Live Job Feed", "Career Tools", "Application Tracker"}:
+    if menu not in {"Live Job Feed", "Career Tools", "Application Tracker", "Experience Classifier (SVM)"}:
         df = st.session_state.data
 
     # ==========================================
@@ -725,6 +733,27 @@ else:
     # ==========================================
     # 5. DECISION TREE
     # ==========================================
+    elif menu == "Experience Classifier (SVM)":
+        st.header("Experience-level classification")
+        st.caption("Selected V6 model: TF-IDF, experience cues and company/title patterns. Salary is not required.")
+        with st.form("svm_experience_form"):
+            title = st.text_input("Job title", value="Software Engineer")
+            company = st.text_input("Company (optional)")
+            description = st.text_area("Job description (recommended)", height=220)
+            submitted = st.form_submit_button("Predict experience level")
+        if submitted:
+            if not title.strip():
+                st.warning("Enter a job title.")
+            else:
+                try:
+                    with st.spinner("Predicting experience level..."):
+                        label = predict_level(get_experience_model(), title, description, company)
+                    st.success(f"Predicted job level: {label}")
+                    st.caption("An estimated experience category, not an eligibility or hiring decision. Missing descriptions or unfamiliar companies may reduce reliability.")
+                except Exception as exc:
+                    st.error(f"Unable to load or run the experience classifier: {exc}")
+        st.info("V6 held-out retest accuracy: 83.11% (18,972 records). Validation accuracy: 83.54%. The test partition was evaluated in earlier experiments. The original Decision Tree remains available for comparison.")
+
     elif menu == "Decision Tree":
         st.caption("Predict job seniority using salary and job-title features")
 

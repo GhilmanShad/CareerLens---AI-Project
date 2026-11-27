@@ -1,0 +1,54 @@
+test_batch_classification_uses_precise_age (test_freshness_batch_precision.TestFreshnessBatchPrecision.test_batch_classification_uses_precise_age) ... ok
+test_exact_freshness_boundaries (test_freshness_precision.TestFreshnessPrecision.test_exact_freshness_boundaries) ... ok
+test_precise_chronological_sorting (test_freshness_sorting.TestFreshnessSorting.test_precise_chronological_sorting) ... ok
+test_live_features (unittest.loader._FailedTest.test_live_features) ... ERROR
+test_auto_avoids_incomplete_calendar_weeks (test_skill_trend_periods.TestSkillTrendPeriodSelection.test_auto_avoids_incomplete_calendar_weeks) ... ok
+test_applied_date_is_recorded_and_preserved (tests.test_application_dates.ApplicationDateTests.test_applied_date_is_recorded_and_preserved) ... ok
+test_all_six_classes (tests.test_experience_classifier.ExperienceClassifierTests.test_all_six_classes) ... ok
+test_determinism (tests.test_experience_classifier.ExperienceClassifierTests.test_determinism) ... ok
+test_inference (tests.test_experience_classifier.ExperienceClassifierTests.test_inference) ... ok
+test_missing_title (tests.test_experience_classifier.ExperienceClassifierTests.test_missing_title) ... ok
+test_prediction_uses_labeled_neighbors (tests.test_knn_labeled_neighbors.KNNLabeledNeighborsTests.test_prediction_uses_labeled_neighbors) ... ok
+tests.test_roadmap_relevance (unittest.loader._FailedTest.tests.test_roadmap_relevance) ... ERROR
+test_filters_by_target_role (tests.test_skill_gap.TestSkillGap.test_filters_by_target_role) ... ok
+test_identifies_missing_skills (tests.test_skill_gap.TestSkillGap.test_identifies_missing_skills) ... ok
+test_matches_existing_skills (tests.test_skill_gap.TestSkillGap.test_matches_existing_skills) ... ok
+test_no_matching_jobs (tests.test_skill_gap.TestSkillGap.test_no_matching_jobs) ... ok
+test_predict_without_loading_dataset (tests.test_streamlit_classifier.StreamlitClassifierTests.test_predict_without_loading_dataset) ... skipped 'Streamlit is not installed'
+
+======================================================================
+ERROR: test_live_features (unittest.loader._FailedTest.test_live_features)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_live_features
+Traceback (most recent call last):
+  File "/usr/lib/python3.13/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.13/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/mnt/data/finalization/test_live_features.py", line 39, in <module>
+    from modules.resume_tools import (
+    ...<9 lines>...
+    )
+ModuleNotFoundError: No module named 'modules.resume_tools'
+
+
+======================================================================
+ERROR: tests.test_roadmap_relevance (unittest.loader._FailedTest.tests.test_roadmap_relevance)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: tests.test_roadmap_relevance
+Traceback (most recent call last):
+  File "/usr/lib/python3.13/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.13/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/mnt/data/finalization/tests/test_roadmap_relevance.py", line 5, in <module>
+    from modules.resume_tools import build_learning_roadmap
+ModuleNotFoundError: No module named 'modules.resume_tools'
+
+
+----------------------------------------------------------------------
+Ran 17 tests in 1.954s
+
+FAILED (errors=2, skipped=1)

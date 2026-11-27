@@ -1,0 +1,13 @@
+Supplement audit {'Associate': 24482, 'Mid-Senior level': 15998}
+Company features: keys 17864 validation coverage 0.7697225334475714
+Validation transformed (15173, 400355) 10400465
+Original features (60295, 400355) 42269558
+Supplement features (15000, 400355) 9053492
+CACHE COMPLETE
+TRAIN (75295, 400355) 51323050 weight 0.1
+FIT COMPLETE 54 True
+RESULT {"supplement_weight": 0.1, "pattern_weight": 0.2, "iterations": 54, "converged": true, "validation": {"accuracy": 0.8354313583338826, "macro_precision": 0.8016121255204761, "macro_recall": 0.7632649280450522, "macro_f1": 0.7804763008382852, "weighted_f1": 0.8321035025979787, "associate_recall": 0.5065189048239895}, "tuning": {"accuracy": 0.8421052631578947, "macro_precision": 0.7894433205061252, "macro_recall": 0.7667075377103537, "macro_f1": 0.7766286861556333, "weighted_f1": 0.8390565827277802, "associate_recall": 0.5080428954423593}, "check": {"accuracy": 0.8282828282828283, "macro_precision": 0.8117437107861326, "macro_recall": 0.7598172900328194, "macro_f1": 0.7830384201383324, "weighted_f1": 0.8247906070463914, "associate_recall": 0.5050761421319797}}
+TRAIN (75295, 400355) 51323050 weight 0.25
+FIT COMPLETE 53 True
+RESULT {"supplement_weight": 0.25, "pattern_weight": 0.1, "iterations": 53, "converged": true, "validation": {"accuracy": 0.8333882554537666, "macro_precision": 0.7980305895164475, "macro_recall": 0.7607023662625565, "macro_f1": 0.7776249582785826, "weighted_f1": 0.8301429057712704, "associate_recall": 0.5013037809647979}, "tuning": {"accuracy": 0.8408308907862877, "macro_precision": 0.7905076617093391, "macro_recall": 0.7677173698990939, "macro_f1": 0.7778376223696829, "weighted_f1": 0.8378145190415879, "associate_recall": 0.5026809651474531}, "check": {"accuracy": 0.8254163254163254, "macro_precision": 0.8039773075985227, "macro_recall": 0.754369330815769, "macro_f1": 0.7767340659109493, "weighted_f1": 0.8220411737818537, "associate_recall": 0.5}}
+EXIT:0

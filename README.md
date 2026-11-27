@@ -5,6 +5,8 @@ CareerLens is an Artificial Intelligence semester project that combines
 machine learning, historical job-market analysis, live job listings,
 career recommendations, and an interactive Streamlit web application.
 
+> **Model update (27 November 2026):** The selected experience classifier is now V6, a fourth algorithm family (linear SVM). Its validation accuracy is 83.54% and its previously evaluated held-out retest accuracy is 83.11%. The original manually implemented Decision Tree, KNN and K-Means are preserved. Sections below describing their original experiments remain historical evidence; see [V6 evaluation and deployment](#v6-evaluation-and-deployment) for the selected model. Full updated Streamlit regression testing is pending on the original installation.
+
 ## 1. Problem Statement
 
 Job seekers often struggle to understand market demand, salary trends,
@@ -35,6 +37,13 @@ through a centralized, interactive platform.
 - Z-score and IQR-based outlier detection.
 
 ### Artificial Intelligence Algorithms
+
+#### Linear SVM (selected V6)
+
+- Uses job title, description and optional company name; no salary required.
+- Combines word and character TF-IDF, experience cues and company/title patterns.
+- Trained on 60,295 original and 15,000 supplementary records (sample weight 0.10).
+- Open **Experience Classifier (SVM)** and submit the job information; the trained model is loaded locally and cached.
 
 #### Decision Tree Classification
 
@@ -229,10 +238,9 @@ eligible dataset and stratified training/testing split.
 
 The majority-class baseline accuracy is approximately 46.36%.
 
-### Best Classification Model
+### Best Original Classification Configuration
 
-The Enhanced Decision Tree is selected as the best-performing
-classification configuration among the evaluated models.
+The Enhanced Decision Tree was selected among the original salary-dependent experiments. V6 is now the selected experience classifier; see the V6 section for its separate evaluation.
 
 It achieves:
 
@@ -611,3 +619,39 @@ semester project to demonstrate the practical application of
 machine learning, data preprocessing, exploratory data analysis,
 model evaluation, graph search, recommendation techniques,
 and interactive web application development.
+
+
+## V6 evaluation and deployment
+
+The selected frozen V6 model is packaged in `models/experience_svm_v6.joblib`.
+The original 123,849-posting historical dataset is unchanged; the additional 15,000 postings are used only for SVM training. The supplementary data comes from https://www.kaggle.com/datasets/asaniczka/1-3m-linkedin-jobs-and-skills-2024 (selected Associate and Mid-Senior rows; sample labels not independently verified).
+
+| Metric | Validation (15,173) | Held-out retest (18,972) |
+|---|---:|---:|
+| Accuracy | 83.54% | 83.11% |
+| Macro precision | 80.16% | 80.20% |
+| Macro recall | 76.33% | 76.81% |
+| Macro F1 | 78.05% | 78.30% |
+| Weighted F1 | 83.21% | 82.78% |
+| Associate recall | 50.65% | 51.12% |
+
+Description-prefix groups were split using seeds 42 and 43. Features and company patterns were fitted on original training data only. The test partition was excluded from V6 training but was evaluated in earlier experiments. This is not an untouched external test; the 85% goal was not met. Earlier Decision Tree/KNN results were measured on a different population and cannot be treated as a controlled algorithm comparison. Company-specific patterns may generalize less well to new employers; near-duplicates and noisy labels can remain.
+
+Install and verify in a project virtual environment:
+
+```bash
+python -m pip install -r requirements.txt
+python -m pip check
+python -m unittest discover -v
+python -m streamlit run app.py
+```
+
+Use only the trusted bundled model. Tested model runtime: Python 3.13.5, scikit-learn 1.8.0, numpy 2.3.5, scipy 1.17.0, pandas 2.2.3, joblib 1.5.3. Ubuntu Python 3.14 environment compatibility and end-to-end UI are not yet verified. The source update preserves `modules/resume_tools.py` from your original project. In the execution container, Streamlit and the original resume module were unavailable; 14 tests passed (including 4 new classifier tests), two original test modules could not be imported, and the UI smoke test was skipped. Run the complete local suite before merging.
+
+To reproduce the frozen retest (not retrain):
+
+```bash
+python final_test.py --original archive/postings.csv --model models/experience_svm_v6.joblib --output reports/v6_test.json
+```
+
+Training scripts (`cache_features.py`, `fit_cached.py`, `run_v4.py`, `optimize_experience_v3.py`, `compare_supplement.py`) document the experimental pipeline; exact V6 retraining requires the original postings, supplementary sample ZIP, and V4/V5 checkpoints from the prior optimization packages. See `reports/v6_validation.json` and `reports/v6_test.json` for full results and the confusion matrix. No raw data is included in the update.
